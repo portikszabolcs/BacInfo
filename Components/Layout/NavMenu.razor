@@ -1,0 +1,31 @@
+﻿<div class="top-row">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">
+            <img src="img/logo.png" alt="Logo" class="logo" />
+        </a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="grades">
+                <span class="bi bi-pie-chart-fill nav-icon" aria-hidden="true"></span> Grades
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counties">
+                <span class="bi bi-bar-chart-fill nav-icon" aria-hidden="true"></span> Counties
+            </NavLink>
+        </div>
+    </nav>
+</div>

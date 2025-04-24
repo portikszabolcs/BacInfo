@@ -1,0 +1,104 @@
+﻿@page "/"
+
+@using Services
+@using Models
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Sections
+@inject ResultService _resultService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>All results</PageTitle>
+<SectionContent SectionName="Title"> All results </SectionContent>
+
+@if (results is null)
+{
+    <div class="d-flex flex-column p-3 gap-3 justify-content-center align-items-center" style="height: 60vh;">
+        <Spinner Color="SpinnerColor.Primary"/>
+        <p class="text-secondary">
+            Loading...
+        </p>
+    </div>
+}
+
+<Grid TItem="BacResult" Class="table table-hover" DataProvider="ResultsDataProvider"
+AllowFiltering="true" AllowPaging="true" PageSize="50" AllowSorting="true" AllowRowClick="true"
+FiltersRowCssClass="bg-secondary text-white bg-opacity-25 border-bottom-0"
+HeaderRowCssClass="bg-secondary text-white border-bottom-0"
+FixedHeader="true"
+Height="82"
+Unit="Unit.Vh"
+EmptyText="No results found"
+OnRowClick="SelectRow"
+Responsive="true">
+    <GridColumns>
+        <GridColumn Freeze="true" FreezeDirection="FreezeDirection.Left" TItem="BacResult" HeaderText="Cod candidat" PropertyName="CodCandidat"
+        SortKeySelector="item => item.CodCandidat">
+            @context.CodCandidat
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Unitate Invatamant" PropertyName="UnitateInvatamant" FilterTextboxWidth="20"
+        SortKeySelector="item => item.UnitateInvatamant">
+            @context.UnitateInvatamant
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Specializare" PropertyName="Specializare" SortKeySelector="item => item.Specializare">
+            @context.Specializare
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Lmb. Romana" PropertyName="LimbaRomana.NotaFinala" SortKeySelector="item => item.LimbaRomana != null ? item.LimbaRomana.NotaFinala : 0.0">
+            @context.LimbaRomana?.NotaFinala
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Lmb. Materna" PropertyName="LimbaMaterna?.Nume" SortKeySelector="item => item.LimbaMaterna != null ? item.LimbaMaterna.Nume : string.Empty">
+            @context.LimbaMaterna?.Nume
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Nota L. Materna" PropertyName="LimbaMaterna?.NotaFinala" SortKeySelector="item => item.LimbaMaterna != null ? item.LimbaMaterna.NotaFinala : 0.0">
+            @context.LimbaMaterna?.NotaFinala
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Lmb. Moderna" PropertyName="LimbaModerna" SortKeySelector="item => item.LimbaModerna">
+            @context.LimbaModerna
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Nota L. Moderna" PropertyName="LimbaModernaNota" SortKeySelector="item => item.LimbaModernaNota">
+            @context.LimbaModernaNota
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Disciplina Obligatorie" PropertyName="DisciplinaObligatorie.Nume" SortKeySelector="item => item.DisciplinaObligatorie != null ? item.DisciplinaObligatorie.Nume : string.Empty">
+            @context.DisciplinaObligatorie?.Nume
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Nota D. Oblig." PropertyName="DisciplinaObligatorie.NotaFinala" SortKeySelector="item => item.DisciplinaObligatorie != null ? item.DisciplinaObligatorie.NotaFinala : 0.0">
+            @context.DisciplinaObligatorie?.NotaFinala
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Disciplina Aleasa" PropertyName="DisciplinaAleasa.Nume" SortKeySelector="item => item.DisciplinaAleasa != null ? item.DisciplinaAleasa.Nume : string.Empty">
+            @context.DisciplinaAleasa?.Nume
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Nota D. Aleasa" PropertyName="DisciplinaAleasa.NotaFinala" SortKeySelector="item => item.DisciplinaAleasa != null ? item.DisciplinaAleasa.NotaFinala : 0.0">
+            @context.DisciplinaAleasa?.NotaFinala
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Competente digitale" PropertyName="CompetenteDigitale" SortKeySelector="item => item.CompetenteDigitale">
+            @context.CompetenteDigitale
+        </GridColumn>
+        <GridColumn TItem="BacResult" HeaderText="Media" PropertyName="Media" SortKeySelector="item => item.Media">
+            @context.Media
+        </GridColumn>
+        <GridColumn TItem="BacResult" Freeze="true" FreezeDirection="FreezeDirection.Right" HeaderText="Rezultat" PropertyName="RezultatFinal"
+        SortKeySelector="item => item.RezultatFinal.ToString()" ColumnClass="@(x => x.RezultatFinal == ResultType.Reusit ? "table-success" : "table-danger")">
+            @context.RezultatFinal
+        </GridColumn>
+    </GridColumns>
+</Grid>
+
+@code {
+    List<BacResult>? results = null;
+
+    private async Task<GridDataProviderResult<BacResult>> ResultsDataProvider(GridDataProviderRequest<BacResult> request)
+    {
+        if (results is null)
+        {
+            results = await _resultService.GetAllResults();
+            StateHasChanged();
+        }
+
+        return await Task.FromResult(request.ApplyTo(results));
+    }
+
+    private void SelectRow(GridRowEventArgs<BacResult> selected)
+    {
+        NavigationManager.NavigateTo($"/details/{selected.Item.CodCandidat}");
+    }
+}

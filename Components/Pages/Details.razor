@@ -1,0 +1,18 @@
+﻿@page "/details/{cod}"
+
+@using Services
+@using Models
+@using Microsoft.AspNetCore.Components.Sections
+@using System.Collections.Immutable;
+
+@inject ResultService _resultService
+
+<PageTitle>Student Details</PageTitle>
+<SectionContent SectionName="Title"> Student @cod details </SectionContent>
+
+@code {
+    [Parameter]
+    public string cod { get; set; } = "";
+    
+    private BacResult? student = null;
+}

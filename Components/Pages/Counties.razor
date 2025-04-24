@@ -1,0 +1,56 @@
+﻿@page "/counties"
+
+@using Services
+@using Models
+@using Microsoft.AspNetCore.Components.Sections
+@using System.Collections.Immutable;
+
+@inject ResultService _resultService
+@attribute [StreamRendering]
+
+<PageTitle>Counties</PageTitle>
+<SectionContent SectionName="Title"> Averages by county </SectionContent>
+
+<div class="p-3">
+    <BarChart @ref="barChart" />
+</div>
+
+@code {
+    private BarChart barChart = default!;
+    private ChartData chartData = default!;
+    private BarChartOptions barChartOptions = new BarChartOptions
+        {
+            Responsive = true,
+            Interaction = new Interaction { Mode = InteractionMode.X },
+            IndexAxis = "x"
+        };
+
+    private ImmutableSortedSet<BacResult> counties = ImmutableSortedSet.Create<BacResult>();
+
+    protected override void OnInitialized()
+    {
+        var labels = _resultService.GetCountyNames().Result.ToList();
+        var counts = _resultService.GetCountyAverages().Result;
+        var dataset = new BarChartDataset()
+        {
+            Data = counts,
+            BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[0] },
+            BorderColor = new List<string> { ColorUtility.CategoricalTwelveColors[0] },
+            BorderWidth = new List<double> { 0 },
+        };
+        chartData = new ChartData { Labels = labels, Datasets = [dataset] };
+
+        barChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Counties", Display = true };
+        barChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Averages", Display = true };
+        barChartOptions.Plugins.Legend.Display = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await barChart.InitializeAsync(chartData, barChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
