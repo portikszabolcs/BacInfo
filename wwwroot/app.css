@@ -50,19 +50,24 @@ h1:focus {
     border-color: #929292;
 }
 
+.bb-table-sticky {
+    border-collapse: separate;
+}
+
 .bb-table-sticky > thead > tr > th {
     background-color: var(--bs-primary) !important;
+    border-bottom-width: 0;
 }
 
 .bb-table-sticky > thead > tr.bg-opacity-25 > th {
     background-color: #4fb0ff !important;
 }
 
-td.table-success, td.table-danger {
+.results-table td.table-success, td.table-danger {
     background-color: var(--bs-table-bg) !important;
     border-color: var(--bs-table-border-color);
 }
-td.freeze-column {
+.results-table td.freeze-column {
     box-shadow: inset 1px 0 0 var(--bs-table-border-color), inset 0 0 0 var(--bs-table-border-color), inset -1px 0 0 var(--bs-table-border-color), inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg))) !important;
 }
 

@@ -9,11 +9,12 @@ main {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #064741 70%);
+    background-color: rgb(29, 78, 121);
 }
 
 .top-row {
     background-color: #f7f7f7;
+    border-top: 1px solid transparent;
     border-bottom: 1px solid #d6d5d5;
     justify-content: flex-start;
     height: 3.5rem;
@@ -24,6 +25,9 @@ main {
 
     .top-row h1 {
         font-size: 1.75rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
         margin: 0;
     }
 
@@ -62,7 +66,7 @@ main {
     }
 
     .top-row {
-        padding-left: 2rem !important;
+        padding-left: 1.5rem !important;
         padding-right: 1.5rem !important;
     }
 }

@@ -73,6 +73,12 @@ namespace BacInfo.Services
             return passRate;
         }
 
+        public async Task<BacResult?> GetStudentByCode(string code)
+        {
+            _bacResults ??= await GetBacResults();
+            return _bacResults.Find((x) => x.CodCandidat == code);
+        }
+
         public BacResult RawResultToBacResult(BacResultRaw raw)
         {
             Limba? limbaRomana = null;

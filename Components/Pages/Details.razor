@@ -10,9 +10,86 @@
 <PageTitle>Student Details</PageTitle>
 <SectionContent SectionName="Title"> Student @cod details </SectionContent>
 
+@if (student == null)
+{
+    <p class="p-3"> Searching for student @cod ...</p>
+}
+else
+{
+    <div class="details p-3 @ResultColor">
+        <table class="w-100">
+            <tr>
+                <th scope="row">Cod candidat</th>
+                <td>@student.CodCandidat</td>
+            </tr>
+            <tr>
+                <th scope="row">Unitate invatamant</th>
+                <td>@student.UnitateInvatamant</td>
+            </tr>
+            <tr>
+                <th scope="row">Specializare</th>
+                <td>@student.Specializare</td>
+            </tr>
+            <tr>
+                <th scope="row">Media generala</th>
+                <td>@student.Media</td>
+            </tr>
+            <tr>
+                <th scope="row">Rezultat</th>
+                <td>@student.RezultatFinal</td>
+            </tr>
+        </table>
+    </div>
+    <div class="student-charts p-3">
+        <RadarChart @ref="gradesChart" Width="500" />
+    </div>
+}
+
 @code {
     [Parameter]
     public string cod { get; set; } = "";
-    
+
     private BacResult? student = null;
+    private string ResultColor = "";
+
+    private RadarChart gradesChart = default!;
+    private RadarChartOptions gradesChartOptions = default!;
+    private ChartData gradesChartData = default!;
+    private string[]? chartColors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await _resultService.GetStudentByCode(cod);
+        ResultColor = student?.RezultatFinal == ResultType.Reusit ? "result-success" : "result-failed";
+
+        chartColors = ColorUtility.CategoricalSixColors;
+        var color = chartColors![0];
+        var dataset = new RadarChartDataset()
+            {
+                Label = "Note Finale",
+                Fill = true,
+                BackgroundColor = $"{color}33",
+                BorderColor = $"{color}dd",
+                PointHitRadius = [10],
+                Data = new List<double?>()
+            {
+                student?.LimbaRomana?.NotaFinala ?? 0,
+                student?.LimbaMaterna?.NotaFinala ?? 0,
+                student?.DisciplinaObligatorie?.NotaFinala ?? 0,
+                student?.DisciplinaAleasa?.NotaFinala ?? 0
+            },
+            };
+
+        gradesChartData = new ChartData { Labels = ["Romana", "Materna", "Obligatorie", "Aleasa"], Datasets = [dataset] };
+        gradesChartOptions = new() { Responsive = true };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await gradesChart.InitializeAsync(gradesChartData, gradesChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
 }

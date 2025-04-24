@@ -1,0 +1,21 @@
+﻿.details {
+    --result-color: var(--bs-secondary);
+    background: linear-gradient(to right, var(--bs-secondary) 75%, var(--result-color));
+    color: white;
+}
+
+.result-success {
+    --result-color: var(--bs-success);
+}
+
+.result-failed {
+    --result-color: var(--bs-danger);
+}
+
+.details th {
+    text-transform: uppercase;
+}
+
+.details td {
+    padding: 3px;
+}
