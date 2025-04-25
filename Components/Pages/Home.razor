@@ -43,37 +43,25 @@ Responsive="true">
         <GridColumn TItem="BacResult" HeaderText="Specializare" PropertyName="Specializare" SortKeySelector="item => item.Specializare">
             @context.Specializare
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Lmb. Romana" PropertyName="LimbaRomana.NotaFinala" SortKeySelector="item => item.LimbaRomana != null ? item.LimbaRomana.NotaFinala : 0.0">
+        <GridColumn TItem="BacResult" HeaderText="L. Romana" PropertyName="LimbaRomana.NotaFinala" SortKeySelector="item => item.LimbaRomana != null ? item.LimbaRomana.NotaFinala : 0.0">
             @context.LimbaRomana?.NotaFinala
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Lmb. Materna" PropertyName="LimbaMaterna?.Nume" SortKeySelector="item => item.LimbaMaterna != null ? item.LimbaMaterna.Nume : string.Empty">
-            @context.LimbaMaterna?.Nume
-        </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Nota L. Materna" PropertyName="LimbaMaterna?.NotaFinala" SortKeySelector="item => item.LimbaMaterna != null ? item.LimbaMaterna.NotaFinala : 0.0">
+        <GridColumn TItem="BacResult" HeaderText="L. Materna" PropertyName="LimbaMaterna?.NotaFinala" SortKeySelector="item => item.LimbaMaterna != null ? item.LimbaMaterna.NotaFinala : 0.0">
             @context.LimbaMaterna?.NotaFinala
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Lmb. Moderna" PropertyName="LimbaModerna" SortKeySelector="item => item.LimbaModerna">
-            @context.LimbaModerna
-        </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Nota L. Moderna" PropertyName="LimbaModernaNota" SortKeySelector="item => item.LimbaModernaNota">
+        <GridColumn TItem="BacResult" HeaderText="Lim. Moderna" PropertyName="LimbaModernaNota" SortKeySelector="item => item.LimbaModernaNota">
             @context.LimbaModernaNota
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Disciplina Obligatorie" PropertyName="DisciplinaObligatorie.Nume" SortKeySelector="item => item.DisciplinaObligatorie != null ? item.DisciplinaObligatorie.Nume : string.Empty">
-            @context.DisciplinaObligatorie?.Nume
-        </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Nota D. Oblig." PropertyName="DisciplinaObligatorie.NotaFinala" SortKeySelector="item => item.DisciplinaObligatorie != null ? item.DisciplinaObligatorie.NotaFinala : 0.0">
+        <GridColumn TItem="BacResult" HeaderText="Disc. Oblig." PropertyName="DisciplinaObligatorie.NotaFinala" SortKeySelector="item => item.DisciplinaObligatorie != null ? item.DisciplinaObligatorie.NotaFinala : 0.0">
             @context.DisciplinaObligatorie?.NotaFinala
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Disciplina Aleasa" PropertyName="DisciplinaAleasa.Nume" SortKeySelector="item => item.DisciplinaAleasa != null ? item.DisciplinaAleasa.Nume : string.Empty">
-            @context.DisciplinaAleasa?.Nume
-        </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Nota D. Aleasa" PropertyName="DisciplinaAleasa.NotaFinala" SortKeySelector="item => item.DisciplinaAleasa != null ? item.DisciplinaAleasa.NotaFinala : 0.0">
+        <GridColumn TItem="BacResult" HeaderText="Disc. Aleasa" PropertyName="DisciplinaAleasa.NotaFinala" SortKeySelector="item => item.DisciplinaAleasa != null ? item.DisciplinaAleasa.NotaFinala : 0.0">
             @context.DisciplinaAleasa?.NotaFinala
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Competente digitale" PropertyName="CompetenteDigitale" SortKeySelector="item => item.CompetenteDigitale">
+        <GridColumn TItem="BacResult" HeaderText="Comp. digitale" PropertyName="CompetenteDigitale" SortKeySelector="item => item.CompetenteDigitale">
             @context.CompetenteDigitale
         </GridColumn>
-        <GridColumn TItem="BacResult" HeaderText="Media" PropertyName="Media" SortKeySelector="item => item.Media">
+        <GridColumn TItem="BacResult" HeaderText="Media" PropertyName="Media" SortKeySelector="item => item.Media" FilterTextboxWidth="6">
             @context.Media
         </GridColumn>
         <GridColumn TItem="BacResult" Freeze="true" FreezeDirection="FreezeDirection.Right" HeaderText="Rezultat" PropertyName="RezultatFinal"

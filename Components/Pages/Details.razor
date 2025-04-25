@@ -7,12 +7,12 @@
 
 @inject ResultService _resultService
 
-<PageTitle>Student Details</PageTitle>
-<SectionContent SectionName="Title"> Student @cod details </SectionContent>
+<PageTitle>Rezultatele studentului</PageTitle>
+<SectionContent SectionName="Title"> Rezultatele studentului @cod </SectionContent>
 
 @if (student == null)
 {
-    <p class="p-3"> Searching for student @cod ...</p>
+    <p class="p-3"> Cautarea studentului @cod ...</p>
 }
 else
 {
@@ -32,16 +32,220 @@ else
             </tr>
             <tr>
                 <th scope="row">Media generala</th>
-                <td>@student.Media</td>
+                <td>@(student.Media == 0 ? "-" : student.Media)</td>
             </tr>
             <tr>
-                <th scope="row">Rezultat</th>
+                <th scope="row">Rezultat final</th>
                 <td>@student.RezultatFinal</td>
             </tr>
         </table>
     </div>
-    <div class="student-charts p-3">
-        <RadarChart @ref="gradesChart" Width="500" />
+    <div class="student-charts">
+        <Card Style="@($"border-color: {chartColors![1]}bb; border-width: 3px;")">
+            <div class="progress" Style="@($"background-color: {chartColors![1]}20; height: {Math.Round(student.LimbaRomana?.NotaFinala ?? 0, 1) * 10 }%;")"></div>
+            <CardBody Class="z-1">
+                <CardTitle>Limba romana</CardTitle>
+                <CardText>
+                    @if(student.LimbaRomana != null)
+                    {
+                        <table class="w-100">
+                            <tr>
+                                <th>Oral</th>
+                                <td>@(student.LimbaRomana.Competente)</td>
+                            </tr>
+                            <tr>
+                                <th>Scris</th>
+                                <td>@student.LimbaRomana.Scris</td>
+                            </tr>
+                            <tr>
+                                <th>Contestatie</th>
+                                <td>@student.LimbaRomana.Contestatie</td>
+                            </tr>
+                            <tr>
+                                <th>Nota finala</th>
+                                <td>@student.LimbaRomana.NotaFinala</td>
+                            </tr>
+                        </table>
+                    } else
+                    {
+                        <p> Neprezentat </p>
+                    }
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Style="@($"border-color: {chartColors![3]}bb; border-width: 3px;")">
+            <div class="progress" Style="@($"background-color: {chartColors![3]}20; height: {Math.Round(student.DisciplinaObligatorie?.NotaFinala ?? 0, 1) * 10 }%;")"></div>
+            <CardBody Class="z-1">
+                <CardTitle>Disciplina obligatorie</CardTitle>
+                <CardText>
+                    @if(student.DisciplinaObligatorie == null)
+                    {
+                        <p> Neprezentat </p>
+                    } else
+                    {
+                        <table class="w-100">
+                            <tr>
+                                <th>Proba</th>
+                                <td>@student.DisciplinaObligatorie.Nume</td>
+                            </tr>
+                            <tr>
+                                <th>Scris</th>
+                                <td>@student.DisciplinaObligatorie.Scris</td>
+                            </tr>
+                            <tr>
+                                <th>Contestatie</th>
+                                <td>@student.DisciplinaObligatorie.Contestatie</td>
+                            </tr>
+                            <tr>
+                                <th>Nota finala</th>
+                                <td>@student.DisciplinaObligatorie.NotaFinala</td>
+                            </tr>
+                        </table>
+                    }
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Style="@($"border-color: {chartColors![5]}bb; border-width: 3px;")">
+            <div class="progress" Style="@($"background-color: {chartColors![5]}20; height: {Math.Round(student.DisciplinaAleasa?.NotaFinala ?? 0, 1) * 10 }%;")"></div>
+            <CardBody Class="z-1">
+                <CardTitle>Disciplina aleasa</CardTitle>
+                <CardText>
+                    @if (student.DisciplinaAleasa == null)
+                    {
+                        <p> Neprezentat </p>
+                    }
+                    else
+                    {
+                        <table class="w-100">
+                            <tr>
+                                <th>Proba</th>
+                                <td>@student.DisciplinaAleasa.Nume</td>
+                            </tr>
+                            <tr>
+                                <th>Scris</th>
+                                <td>@student.DisciplinaAleasa.Scris</td>
+                            </tr>
+                            <tr>
+                                <th>Contestatie</th>
+                                <td>@student.DisciplinaAleasa.Contestatie</td>
+                            </tr>
+                            <tr>
+                                <th>Nota finala</th>
+                                <td>@student.DisciplinaAleasa.NotaFinala</td>
+                            </tr>
+                        </table>
+                    }
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Style="@($"border-color: {chartColors![2]}bb; border-width: 3px;")">
+            <div class="progress" Style="@($"background-color: {chartColors![2]}20; height: {Math.Round(student.LimbaMaterna?.NotaFinala ?? 0, 1) * 10 }%;")"></div>
+            <CardBody Class="z-1">
+                <CardTitle>Limba materna</CardTitle>
+                @if (student.LimbaMaterna == null)
+                {
+                    @* <table class="w-100"> *@
+                    @*     <tr> *@
+                    @*         <th>Proba</th> *@
+                    @*         <td>Nu se aplica</td> *@
+                    @*     </tr> *@
+                    @* </table> *@
+                    <div class="d-flex h-100 align-items-center pb-5 justify-content-center opacity-75">
+                        <p> Nu se aplica </p>
+                    </div>
+                }
+                else
+                {
+                <CardText>
+                        <table class="w-100">
+                            <tr>
+                                <th>Proba</th>
+                                <td>@student.LimbaMaterna.Nume</td>
+                            </tr>
+                            <tr>
+                                <th>Oral</th>
+                                <td>@(student.LimbaMaterna.Competente)</td>
+                            </tr>
+                            <tr>
+                                <th>Scris</th>
+                                <td>@student.LimbaMaterna.Scris</td>
+                            </tr>
+                            <tr>
+                                <th>Contestatie</th>
+                                <td>@student.LimbaMaterna.Contestatie</td>
+                            </tr>
+                            <tr>
+                                <th>Nota finala</th>
+                                <td>@student.LimbaMaterna.NotaFinala</td>
+                            </tr>
+                        </table>
+                </CardText>
+                }
+            </CardBody>
+        </Card>
+        @if (student.LimbaModernaNota != null && student.LimbaModernaNota != "Neprezentat")
+        {
+            <Card style="grid-row: span 2; border-width: 3px; border-color: #adb5bd;">
+                <CardBody>
+                    <RadarChart @ref="langRadar" />
+                </CardBody>
+            </Card>
+        }
+        <Card Style="@($"border-color: {chartColors![0]}bb; background-color: {(student.LimbaModernaNota != null && student.LimbaModernaNota != "Neprezentat" ? chartColors![0]+"20" : "unset")}; border-width: 3px;")">
+            <CardBody>
+                <CardTitle>Limba moderna</CardTitle>
+                <CardText>
+                    <table class="w-100">
+                        <tr>
+                            <th>Proba</th>
+                            <td>@student.LimbaModerna</td>
+                        </tr>
+                        @if (student.LimbaModernaNota == null || student.LimbaModernaNota == "Neprezentat")
+                        {
+                            <tr>
+                                <th>Nota</th>
+                                <td>Neprezentat</td>
+                            </tr>
+                        } else
+                        {
+                            <tr>
+                                <th>Intelegerea textului audiat</th>
+                                <td>@languageLevels?[0]</td>
+                            </tr>
+                            <tr>
+                                <th>Intelegerea textului citit</th>
+                                <td>@languageLevels?[1]</td>
+                            </tr>
+                            <tr>
+                                <th>Producerea de mesaje scrise</th>
+                                <td>@languageLevels?[2]</td>
+                            </tr>
+                            <tr>
+                                <th>Producerea de mesaje orale</th>
+                                <td>@languageLevels?[3]</td>
+                            </tr>
+                            <tr>
+                                <th>Interactiune orala</th>
+                                <td>@languageLevels?[4]</td>
+                            </tr>
+                        }
+                    </table>
+                </CardText>
+            </CardBody>
+        </Card>
+        <Card Style="@($"border-color: {chartColors![4]}bb; background-color: {(student.CompetenteDigitale != null ? chartColors![4]+"20" : "unset")}; border-width: 3px;")">
+            <CardBody>
+                <CardTitle>Alte competente</CardTitle>
+                <CardText>
+                    <table class="w-100">
+                        <tr>
+                            <th>Competente digitale</th>
+                            <td>@(student.CompetenteDigitale ?? "Neprezentat")</td>
+                        </tr>
+                    </table>
+                </CardText>
+            </CardBody>
+        </Card>
     </div>
 }
 
@@ -51,10 +255,10 @@ else
 
     private BacResult? student = null;
     private string ResultColor = "";
+    private List<string>? languageLevels;
 
-    private RadarChart gradesChart = default!;
-    private RadarChartOptions gradesChartOptions = default!;
-    private ChartData gradesChartData = default!;
+    private RadarChart langRadar = default!;
+    private ChartData langRadarData = default!;
     private string[]? chartColors;
 
     protected override async Task OnInitializedAsync()
@@ -63,33 +267,57 @@ else
         ResultColor = student?.RezultatFinal == ResultType.Reusit ? "result-success" : "result-failed";
 
         chartColors = ColorUtility.CategoricalSixColors;
-        var color = chartColors![0];
-        var dataset = new RadarChartDataset()
-            {
-                Label = "Note Finale",
-                Fill = true,
-                BackgroundColor = $"{color}33",
-                BorderColor = $"{color}dd",
-                PointHitRadius = [10],
-                Data = new List<double?>()
-            {
-                student?.LimbaRomana?.NotaFinala ?? 0,
-                student?.LimbaMaterna?.NotaFinala ?? 0,
-                student?.DisciplinaObligatorie?.NotaFinala ?? 0,
-                student?.DisciplinaAleasa?.NotaFinala ?? 0
-            },
-            };
 
-        gradesChartData = new ChartData { Labels = ["Romana", "Materna", "Obligatorie", "Aleasa"], Datasets = [dataset] };
-        gradesChartOptions = new() { Responsive = true };
+        InitLangRadar();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await gradesChart.InitializeAsync(gradesChartData, gradesChartOptions);
+            if(langRadar != null)
+                await langRadar.InitializeAsync(langRadarData, new RadarChartOptions(){ Responsive = true });
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void InitLangRadar()
+    {
+        var color = chartColors![0];
+        var dataset = new RadarChartDataset()
+            {
+                Label = "Competente limba moderna",
+                Fill = true,
+                BackgroundColor = $"{color}33",
+                BorderColor = $"{color}dd",
+                PointHitRadius = [10],
+                Data = GetLanguageLevels(student?.LimbaModernaNota ?? ""),
+            };
+        var minim = new RadarChartDataset()
+            {
+                Label = "Minim",
+                PointBorderColor = ["transparent"],
+                PointHitRadius = [0],
+                Data = [0,0,0,0,0],
+            };
+        var maxim = new RadarChartDataset()
+            {
+                
+                Label = "Maxim",
+                Hidden = false,
+                PointBorderColor = ["transparent"],
+                PointHitRadius = [0],
+                Data = [4, 4, 4, 4, 4],
+            };
+
+        langRadarData = new ChartData { Labels = ["Audio", "Citit", "Prod. Scrisa", "Prod. Orala", "Inter. orala"], Datasets = [minim, dataset, maxim] };
+    }
+
+    private List<double?> GetLanguageLevels(string lang)
+    {
+        List<string> CEFR = ["A1", "A2", "B1", "B2"];
+        languageLevels = lang.Split('-').ToList();
+        var data = languageLevels.Select<string, double?>((x) => (double?)CEFR.IndexOf(x) + 1);
+        return data.ToList();
     }
 }

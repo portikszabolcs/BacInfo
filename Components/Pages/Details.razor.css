@@ -1,15 +1,15 @@
 ﻿.details {
     --result-color: var(--bs-secondary);
-    background: linear-gradient(to right, var(--bs-secondary) 75%, var(--result-color));
+    background-color: var(--result-color);
     color: white;
 }
 
 .result-success {
-    --result-color: var(--bs-success);
+    --result-color: #427060;
 }
 
 .result-failed {
-    --result-color: var(--bs-danger);
+    --result-color: #704555;
 }
 
 .details th {
@@ -18,4 +18,32 @@
 
 .details td {
     padding: 3px;
+}
+
+.student-charts {
+    display: grid;
+    padding: 16px;
+    gap: 16px;
+}
+
+.progress {
+    position:absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    border-radius: 0;
+}
+
+@media (min-width: 992px) {
+    .student-charts {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1450px) {
+    .student-charts {
+        padding: 24px;
+        gap: 24px;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 }
