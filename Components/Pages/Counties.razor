@@ -13,13 +13,25 @@
 <SectionContent SectionName="Title"> Judete </SectionContent>
 
 <div class="p-3">
-    <BarChart @ref="barChart" />
+    <BarChart @ref="averagesChart" />
+</div>
+<div class="p-3">
+    <BarChart @ref="studentsChart" />
 </div>
 
 @code {
-    private BarChart barChart = default!;
-    private ChartData chartData = default!;
-    private BarChartOptions barChartOptions = new BarChartOptions
+    private BarChart averagesChart = default!;
+    private ChartData averagesData = default!;
+    private BarChartOptions averagesChartOptions = new BarChartOptions
+        {
+            Responsive = true,
+            Interaction = new Interaction { Mode = InteractionMode.X },
+            IndexAxis = "x"
+        };
+
+    private BarChart studentsChart = default!;
+    private ChartData studentsData = default!;
+    private BarChartOptions studentsChartOptions = new BarChartOptions
         {
             Responsive = true,
             Interaction = new Interaction { Mode = InteractionMode.X },
@@ -30,28 +42,53 @@
 
     protected override void OnInitialized()
     {
-        var labels = _countyController.GetCountyNames().Result.ToList();
-        var counts = _countyController.GetCountyAverages().Result;
-        var dataset = new BarChartDataset()
-        {
-            Data = counts,
-            BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[0] },
-            BorderColor = new List<string> { ColorUtility.CategoricalTwelveColors[0] },
-            BorderWidth = new List<double> { 0 },
-        };
-        chartData = new ChartData { Labels = labels, Datasets = [dataset] };
-
-        barChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
-        barChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Medii", Display = true };
-        barChartOptions.Plugins.Legend.Display = false;
+        InitAveragesChart();
+        InitStudentsChart();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await barChart.InitializeAsync(chartData, barChartOptions);
+            await averagesChart.InitializeAsync(averagesData, averagesChartOptions);
+            await studentsChart.InitializeAsync(studentsData, studentsChartOptions);
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void InitAveragesChart()
+    {
+        var labels = _countyController.GetCountyNames().Result.ToList();
+        var counts = _countyController.GetCountyAverages().Result;
+        var dataset = new BarChartDataset()
+            {
+                Data = counts,
+                BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[0] },
+                BorderColor = new List<string> { ColorUtility.CategoricalTwelveColors[0] },
+                BorderWidth = new List<double> { 0 },
+            };
+        averagesData = new ChartData { Labels = labels, Datasets = [dataset] };
+
+        averagesChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
+        averagesChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Medii", Display = true };
+        averagesChartOptions.Plugins.Legend.Display = false;
+    }
+
+    private void InitStudentsChart()
+    {
+        var labels = _countyController.GetCountyNames().Result.ToList();
+        var counts = _countyController.GetCountyStudents().Result;
+        var dataset = new BarChartDataset()
+            {
+                Data = counts,
+                BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[1] },
+                BorderColor = new List<string> { ColorUtility.CategoricalTwelveColors[1] },
+                BorderWidth = new List<double> { 0 },
+            };
+        studentsData = new ChartData { Labels = labels, Datasets = [dataset] };
+
+        studentsChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
+        studentsChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Nr. candidati", Display = true };
+        studentsChartOptions.Plugins.Legend.Display = false;
     }
 }

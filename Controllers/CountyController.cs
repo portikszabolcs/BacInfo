@@ -24,5 +24,13 @@ namespace BacInfo.Controllers
 
             return groups.Select((group) => (double?)group.Sum((item) => item.Media) / group.Count()).ToList();
         }
+
+        public async Task<List<double?>> GetCountyStudents()
+        {
+            var _bacResults = await _resultsService.GetAllResults();
+            IEnumerable<IGrouping<string, BacResult>> groups = _bacResults.GroupBy((item) => item.JudetNume).OrderBy((item) => item.Key);
+
+            return groups.Select((group) => (double?)group.Count()).ToList();
+        }
     }
 }
