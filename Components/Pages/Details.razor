@@ -2,10 +2,11 @@
 
 @using Services
 @using Models
+@using Controllers
 @using Microsoft.AspNetCore.Components.Sections
 @using System.Collections.Immutable;
 
-@inject ResultService _resultService
+@inject StudentController _studentController
 
 <PageTitle>Rezultatele studentului</PageTitle>
 <SectionContent SectionName="Title"> Rezultatele studentului @cod </SectionContent>
@@ -263,7 +264,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        student = await _resultService.GetStudentByCode(cod);
+        student = await _studentController.GetStudentByCode(cod);
         ResultColor = student?.RezultatFinal == ResultType.Reusit ? "result-success" : "result-failed";
 
         chartColors = ColorUtility.CategoricalSixColors;

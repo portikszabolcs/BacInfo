@@ -2,10 +2,11 @@
 
 @using Services
 @using Models
+@using Controllers
 @using Microsoft.AspNetCore.Components.Sections
 @using System.Collections.Immutable;
 
-@inject ResultService _resultService
+@inject CountyController _countyController
 @attribute [StreamRendering]
 
 <PageTitle>Judete</PageTitle>
@@ -29,8 +30,8 @@
 
     protected override void OnInitialized()
     {
-        var labels = _resultService.GetCountyNames().Result.ToList();
-        var counts = _resultService.GetCountyAverages().Result;
+        var labels = _countyController.GetCountyNames().Result.ToList();
+        var counts = _countyController.GetCountyAverages().Result;
         var dataset = new BarChartDataset()
         {
             Data = counts,

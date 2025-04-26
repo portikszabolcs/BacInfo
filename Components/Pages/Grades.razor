@@ -2,8 +2,9 @@
 
 @using Services
 @using Models
+@using Controllers
 @using Microsoft.AspNetCore.Components.Sections
-@inject ResultService _resultService
+@inject StatisticsController _statisticsController
 @rendermode InteractiveServer
 
 <PageTitle>Statistici</PageTitle>
@@ -57,7 +58,7 @@
 
     private void InitGradeDistribution()
     {
-        Dictionary<string, double?> distribution = _resultService.GetGradesDistribution().Result;
+        Dictionary<string, double?> distribution = _statisticsController.GetGradesDistribution().Result;
 
         var dataset = new PieChartDataset()
             {
@@ -73,7 +74,7 @@
 
     private void InitResultDistribution()
     {
-        Dictionary<string, double?> passrate = _resultService.GetPassRate().Result;
+        Dictionary<string, double?> passrate = _statisticsController.GetPassRate().Result;
 
         var dataset = new PieChartDataset()
             {
@@ -89,7 +90,7 @@
 
     private void InitGradeHistogram()
     {
-        Dictionary<string, double?> histogram = _resultService.GetGradesHistogram().Result;
+        Dictionary<string, double?> histogram = _statisticsController.GetGradesHistogram().Result;
         var labels = histogram.Keys.Reverse().ToList();
         var dataset = new BarChartDataset()
             {

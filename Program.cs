@@ -1,4 +1,5 @@
 using BacInfo.Components;
+using BacInfo.Controllers;
 using BacInfo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<ResultService>();
+builder.Services.AddScoped<CountyController>();
+builder.Services.AddScoped<StatisticsController>();
+builder.Services.AddScoped<StudentController>();
 builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
