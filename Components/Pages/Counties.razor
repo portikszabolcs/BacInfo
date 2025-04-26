@@ -8,8 +8,8 @@
 @inject ResultService _resultService
 @attribute [StreamRendering]
 
-<PageTitle>Counties</PageTitle>
-<SectionContent SectionName="Title"> Averages by county </SectionContent>
+<PageTitle>Judete</PageTitle>
+<SectionContent SectionName="Title"> Judete </SectionContent>
 
 <div class="p-3">
     <BarChart @ref="barChart" />
@@ -40,8 +40,8 @@
         };
         chartData = new ChartData { Labels = labels, Datasets = [dataset] };
 
-        barChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Counties", Display = true };
-        barChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Averages", Display = true };
+        barChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
+        barChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Medii", Display = true };
         barChartOptions.Plugins.Legend.Display = false;
     }
 

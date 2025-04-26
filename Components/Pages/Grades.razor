@@ -1,4 +1,4 @@
-﻿@page "/grades"
+﻿@page "/statistics"
 
 @using Services
 @using Models
@@ -6,16 +6,19 @@
 @inject ResultService _resultService
 @rendermode InteractiveServer
 
-<PageTitle>Grades</PageTitle>
-<SectionContent SectionName="Title"> Grades </SectionContent>
+<PageTitle>Statistici</PageTitle>
+<SectionContent SectionName="Title"> Statistici </SectionContent>
 
 <div class="grid text-center">
-    <div class="row">
-        <div class="col p-3">
+    <div class="row p-2 gap-4">
+        <div class="col">
             <PieChart @ref="gradeDistributionChart" />
         </div>
-        <div class="col p-3">
+        <div class="col">
             <PieChart @ref="resultDistributionChart" />
+        </div>
+        <div class="col">
+            <BarChart @ref="gradeHistogram" />
         </div>
     </div>
 </div>
@@ -30,10 +33,15 @@
     private PieChartOptions resultDistributionOptions = default!;
     private ChartData resultDistributionChartData = default!;
 
+    private BarChart gradeHistogram = default!;
+    private ChartData gradeHistogramData = default!;
+    private BarChartOptions gradeHistogramOptions = default!;
+
     protected override void OnInitialized()
     {
         InitGradeDistribution();
         InitResultDistribution();
+        InitGradeHistogram();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -42,6 +50,7 @@
         {
             await gradeDistributionChart.InitializeAsync(gradeDistributionChartData, gradeDistributionOptions);
             await resultDistributionChart.InitializeAsync(resultDistributionChartData, resultDistributionOptions);
+            await gradeHistogram.InitializeAsync(gradeHistogramData, gradeHistogramOptions);
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -49,8 +58,6 @@
     private void InitGradeDistribution()
     {
         Dictionary<string, double?> distribution = _resultService.GetGradesDistribution().Result;
-        distribution["<5"] = distribution["0"];
-        distribution.Remove("0");
 
         var dataset = new PieChartDataset()
             {
@@ -60,7 +67,7 @@
 
         gradeDistributionOptions = new();
         gradeDistributionOptions.Responsive = true;
-        gradeDistributionOptions.Plugins.Title!.Text = "Distribution of averages";
+        gradeDistributionOptions.Plugins.Title!.Text = "Distributia mediilor";
         gradeDistributionOptions.Plugins.Title.Display = true;
     }
 
@@ -76,7 +83,31 @@
 
         resultDistributionOptions = new();
         resultDistributionOptions.Responsive = true;
-        resultDistributionOptions.Plugins.Title!.Text = "Pass/fail rate";
+        resultDistributionOptions.Plugins.Title!.Text = "Rata de promovare";
         resultDistributionOptions.Plugins.Title.Display = true;
+    }
+
+    private void InitGradeHistogram()
+    {
+        Dictionary<string, double?> histogram = _resultService.GetGradesHistogram().Result;
+        var labels = histogram.Keys.Reverse().ToList();
+        var dataset = new BarChartDataset()
+            {
+                Data = histogram.Values.Reverse().ToList(),
+                BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[1] },
+                BorderColor = new List<string> { ColorUtility.CategoricalTwelveColors[1] },
+                BorderWidth = new List<double> { 0 },
+            };
+        gradeHistogramData = new ChartData { Labels = labels, Datasets = [dataset] };
+
+        gradeHistogramOptions = new()
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.X },
+                IndexAxis = "x"
+            };
+        gradeHistogramOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Media", Display = true };
+        gradeHistogramOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Nr. studentilor", Display = true };
+        gradeHistogramOptions.Plugins.Legend.Display = false;
     }
 }

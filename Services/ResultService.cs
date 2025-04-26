@@ -60,6 +60,8 @@ namespace BacInfo.Services
                     mediaDistribution[key] = 1;
                 }
             }
+            mediaDistribution["<5"] = mediaDistribution["0"];
+            mediaDistribution.Remove("0");
             return mediaDistribution;
         }
 
@@ -71,6 +73,22 @@ namespace BacInfo.Services
             passRate.Add("Reusit", reusit);
             passRate.Add("Respins", _bacResults.Count - reusit);
             return passRate;
+        }
+
+        public async Task<Dictionary<string, double?>> GetGradesHistogram()
+        {
+            _bacResults ??= await GetBacResults();
+            List<IGrouping<double, BacResult>> grades = _bacResults!.GroupBy((item) => Math.Floor(item.Media)).ToList();
+            Dictionary<string, double?> histogram = new();
+            grades.ForEach((group) =>
+            {
+                histogram.Add("≥" + group.Key.ToString(), group.Count());
+            });
+            histogram["≥9"] += histogram["≥10"]!.Value;
+            histogram["<5"] = histogram["≥0"];
+            histogram.Remove("≥0");
+            histogram.Remove("≥10");
+            return histogram;
         }
 
         public async Task<BacResult?> GetStudentByCode(string code)
