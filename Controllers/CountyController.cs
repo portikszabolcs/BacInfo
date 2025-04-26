@@ -32,5 +32,13 @@ namespace BacInfo.Controllers
 
             return groups.Select((group) => (double?)group.Count()).ToList();
         }
+
+        public async Task<List<double?>> GetCountyPassRate()
+        {
+            var _bacResults = await _resultsService.GetAllResults();
+            IEnumerable<IGrouping<string, BacResult>> groups = _bacResults.GroupBy((item) => item.JudetNume).OrderBy((item) => item.Key);
+
+            return groups.Select((group) => (double?)group.Count((x) => x.RezultatFinal == ResultType.Reusit) / group.Count() * 100).ToList();
+        }
     }
 }
