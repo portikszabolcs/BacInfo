@@ -7,19 +7,27 @@
 @inject StatisticsController _statisticsController
 @rendermode InteractiveServer
 
-<PageTitle>Statistici</PageTitle>
-<SectionContent SectionName="Title"> Statistici </SectionContent>
+<PageTitle>Statistici generale</PageTitle>
+<SectionContent SectionName="Title"> Statistici generale </SectionContent>
 
-<div class="grid text-center">
-    <div class="row p-2 gap-4">
-        <div class="col">
+<div class="text-center">
+    <div class="row p-2">
+        <div class="col col-lg-4 py-2">
             <PieChart @ref="gradeDistributionChart" />
         </div>
-        <div class="col">
+        <div class="col col-lg-4 py-2">
             <PieChart @ref="resultDistributionChart" />
         </div>
-        <div class="col">
+        <div class="col col-lg-4 py-2">
+            <PieChart @ref="digitalSkillsChart" />
+        </div>
+    </div>
+    <div class="row justify-content-center p-2 p-lg-4">
+        <div class="col col-lg-6 p-2 p-lg-4">
             <BarChart @ref="gradeHistogram" />
+        </div>
+        <div class="col col-lg-6 p-2 p-lg-4">
+            <BarChart @ref="topSpecializations" />
         </div>
     </div>
 </div>
@@ -34,15 +42,25 @@
     private PieChartOptions resultDistributionOptions = default!;
     private ChartData resultDistributionChartData = default!;
 
+    private PieChart digitalSkillsChart = default!;
+    private PieChartOptions digitalSkillsOptions = default!;
+    private ChartData digitalSkillsChartData = default!;
+
     private BarChart gradeHistogram = default!;
     private ChartData gradeHistogramData = default!;
     private BarChartOptions gradeHistogramOptions = default!;
+
+    private BarChart topSpecializations = default!;
+    private ChartData topSpecializationsData = default!;
+    private BarChartOptions topSpecializationsOptions = default!;
 
     protected override void OnInitialized()
     {
         InitGradeDistribution();
         InitResultDistribution();
         InitGradeHistogram();
+        InitDigitalSkills();
+        InitTopSpecializations();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -51,7 +69,9 @@
         {
             await gradeDistributionChart.InitializeAsync(gradeDistributionChartData, gradeDistributionOptions);
             await resultDistributionChart.InitializeAsync(resultDistributionChartData, resultDistributionOptions);
+            await digitalSkillsChart.InitializeAsync(digitalSkillsChartData, digitalSkillsOptions);
             await gradeHistogram.InitializeAsync(gradeHistogramData, gradeHistogramOptions);
+            await topSpecializations.InitializeAsync(topSpecializationsData, topSpecializationsOptions);
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -68,8 +88,12 @@
 
         gradeDistributionOptions = new();
         gradeDistributionOptions.Responsive = true;
-        gradeDistributionOptions.Plugins.Title!.Text = "Distributia mediilor";
+        gradeDistributionOptions.Plugins.Title!.Text = "Distributia notelor";
         gradeDistributionOptions.Plugins.Title.Display = true;
+        gradeDistributionOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 18,
+            };
     }
 
     private void InitResultDistribution()
@@ -86,6 +110,30 @@
         resultDistributionOptions.Responsive = true;
         resultDistributionOptions.Plugins.Title!.Text = "Rata de promovare";
         resultDistributionOptions.Plugins.Title.Display = true;
+        resultDistributionOptions.Plugins.Title.Font = new ChartFont()
+        {
+            Size = 18,
+        };
+    }
+
+    private void InitDigitalSkills()
+    {
+        Dictionary<string, double?> skills = _statisticsController.GetDigitalSkills().Result;
+
+        var dataset = new PieChartDataset()
+            {
+                Data = skills.Values.ToList<double?>(),
+            };
+        digitalSkillsChartData = new ChartData { Labels = skills.Keys.ToList(), Datasets = [dataset] };
+
+        digitalSkillsOptions = new();
+        digitalSkillsOptions.Responsive = true;
+        digitalSkillsOptions.Plugins.Title!.Text = "Competente digitale";
+        digitalSkillsOptions.Plugins.Title.Display = true;
+        digitalSkillsOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 18,
+            };
     }
 
     private void InitGradeHistogram()
@@ -95,9 +143,7 @@
         var dataset = new BarChartDataset()
             {
                 Data = histogram.Values.Reverse().ToList(),
-                BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[1] },
-                BorderColor = new List<string> { ColorUtility.CategoricalTwelveColors[1] },
-                BorderWidth = new List<double> { 0 },
+                BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[5] },
             };
         gradeHistogramData = new ChartData { Labels = labels, Datasets = [dataset] };
 
@@ -109,6 +155,40 @@
             };
         gradeHistogramOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Media", Display = true };
         gradeHistogramOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Nr. candidati", Display = true };
+        gradeHistogramOptions.Plugins.Title!.Text = "Histograma notelor";
+        gradeHistogramOptions.Plugins.Title.Display = true;
+        gradeHistogramOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 18,
+            };
         gradeHistogramOptions.Plugins.Legend.Display = false;
+    }
+
+    private void InitTopSpecializations()
+    {
+        Dictionary<string, double?> specs = _statisticsController.GetTopSpecializations().Result;
+        var labels = specs.Keys.ToList();
+        var dataset = new BarChartDataset()
+            {
+                Data = specs.Values.ToList(),
+                BackgroundColor = new List<string> { ColorUtility.CategoricalTwelveColors[7] },
+            };
+        topSpecializationsData = new ChartData { Labels = labels, Datasets = [dataset] };
+
+        topSpecializationsOptions = new()
+            {
+                Responsive = true,
+                Interaction = new Interaction { Mode = InteractionMode.X },
+                IndexAxis = "x"
+            };
+        topSpecializationsOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Specializare", Display = true };
+        topSpecializationsOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Nr. candidati", Display = true };
+        topSpecializationsOptions.Plugins.Title!.Text = "Top specializări";
+        topSpecializationsOptions.Plugins.Title.Display = true;
+        topSpecializationsOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 18,
+            };
+        topSpecializationsOptions.Plugins.Legend.Display = false;
     }
 }

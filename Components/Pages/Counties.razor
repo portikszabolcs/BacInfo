@@ -9,16 +9,16 @@
 @inject CountyController _countyController
 @attribute [StreamRendering]
 
-<PageTitle>Judete</PageTitle>
-<SectionContent SectionName="Title"> Judete </SectionContent>
+<PageTitle>Statistici pe judete</PageTitle>
+<SectionContent SectionName="Title"> Statistici pe judete </SectionContent>
 
-<div class="p-3">
+<div class="p-2 p-lg-4">
     <BarChart @ref="averagesChart" />
 </div>
-<div class="p-3">
+<div class="p-2 p-lg-4">
     <BarChart @ref="studentsChart" />
 </div>
-<div class="p-3">
+<div class="p-2 p-lg-4">
     <BarChart @ref="passRateChart" />
 </div>
 
@@ -87,6 +87,12 @@
         averagesChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
         averagesChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Medii", Display = true };
         averagesChartOptions.Plugins.Legend.Display = false;
+        averagesChartOptions.Plugins.Title!.Text = "Media rezultatelor";
+        averagesChartOptions.Plugins.Title.Display = true;
+        averagesChartOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 20,
+            };
     }
 
     private void InitStudentsChart()
@@ -103,6 +109,12 @@
         studentsChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
         studentsChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Nr. candidati", Display = true };
         studentsChartOptions.Plugins.Legend.Display = false;
+        studentsChartOptions.Plugins.Title!.Text = "Numarul candidatilor";
+        studentsChartOptions.Plugins.Title.Display = true;
+        studentsChartOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 20,
+            };
     }
 
     private void InitPassRateChart()
@@ -119,5 +131,11 @@
         passRateChartOptions.Scales.X!.Title = new ChartAxesTitle { Text = "Judete", Display = true };
         passRateChartOptions.Scales.Y!.Title = new ChartAxesTitle { Text = "Rata de promovare (%)", Display = true };
         passRateChartOptions.Plugins.Legend.Display = false;
+        passRateChartOptions.Plugins.Title!.Text = "Rata de promovare";
+        passRateChartOptions.Plugins.Title.Display = true;
+        passRateChartOptions.Plugins.Title.Font = new ChartFont()
+            {
+                Size = 20,
+            };
     }
 }

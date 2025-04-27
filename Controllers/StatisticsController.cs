@@ -13,7 +13,7 @@ namespace BacInfo.Controllers
             Dictionary<string, double?> mediaDistribution = new();
             foreach (BacResult result in _bacResults!)
             {
-                string key = result.Media.ToString("0");
+                string key = Math.Floor(result.Media).ToString();
                 if (mediaDistribution.ContainsKey(key))
                 {
                     mediaDistribution[key]++;
@@ -33,8 +33,10 @@ namespace BacInfo.Controllers
             var _bacResults = await _resultsService.GetAllResults();
             Dictionary<string, double?> passRate = new();
             int reusit = _bacResults.Count((item) => item.RezultatFinal == ResultType.Reusit);
+            int respins = _bacResults.Count((item) => item.RezultatFinal == ResultType.Respins);
             passRate.Add("Reusit", reusit);
-            passRate.Add("Respins", _bacResults.Count - reusit);
+            passRate.Add("Respins", respins);
+            passRate.Add("Neprezentat", _bacResults.Count - reusit - respins);
             return passRate;
         }
 
@@ -52,6 +54,28 @@ namespace BacInfo.Controllers
             histogram.Remove("≥0");
             histogram.Remove("≥10");
             return histogram;
+        }
+
+        public async Task<Dictionary<string, double?>> GetDigitalSkills()
+        {
+            var _bacResults = await _resultsService.GetAllResults();
+            Dictionary<string, double?> skills = _bacResults
+                .GroupBy((item) => item.CompetenteDigitale)
+                .ToDictionary(x => x.Key ?? "Null", x => (double?)x.Count());
+            skills["Neprezentat"] += skills["Null"]!.Value;
+            skills.Remove("Null");
+            return skills;
+        }
+
+        public async Task<Dictionary<string, double?>> GetTopSpecializations()
+        {
+            var _bacResults = await _resultsService.GetAllResults();
+            Dictionary<string, double?> specializations = _bacResults
+                .GroupBy((item) => item.Specializare)
+                .OrderByDescending(x => x.Count())
+                .Take(10)
+                .ToDictionary(x => x.Key ?? "Null", x => (double?)x.Count());
+            return specializations;
         }
     }
 }
